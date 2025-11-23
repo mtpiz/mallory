@@ -1,0 +1,262 @@
+"""
+Sparkly Pixel Art Name Display - MALLORY
+A fun, colorful terminal animation with sparkles!
+"""
+
+import time
+import random
+import os
+import sys
+
+# Fix Windows console encoding
+if sys.platform == 'win32':
+    import codecs
+    sys.stdout = codecs.getwriter('utf-8')(sys.stdout.buffer, 'strict')
+    sys.stderr = codecs.getwriter('utf-8')(sys.stderr.buffer, 'strict')
+
+# ANSI color codes for sparkly effects
+COLORS = {
+    'pink': '\033[95m',
+    'cyan': '\033[96m',
+    'yellow': '\033[93m',
+    'green': '\033[92m',
+    'blue': '\033[94m',
+    'magenta': '\033[95m',
+    'red': '\033[91m',
+    'white': '\033[97m',
+    'bold': '\033[1m',
+    'reset': '\033[0m',
+}
+
+# Sparkle characters
+SPARKLES = ['✨', '⭐', '🌟', '💫', '✦', '✧', '★', '☆', '◆', '◇']
+HEARTS = ['💖', '💕', '💗', '💓', '💝']
+
+# Pixel art for MALLORY (7x5 grid per letter)
+MALLORY = [
+    "███╗   ███╗ █████╗ ██╗     ██╗      ██████╗ ██████╗ ██╗   ██╗",
+    "████╗ ████║██╔══██╗██║     ██║     ██╔═══██╗██╔══██╗╚██╗ ██╔╝",
+    "██╔████╔██║███████║██║     ██║     ██║   ██║██████╔╝ ╚████╔╝ ",
+    "██║╚██╔╝██║██╔══██║██║     ██║     ██║   ██║██╔══██╗  ╚██╔╝  ",
+    "██║ ╚═╝ ██║██║  ██║███████╗███████╗╚██████╔╝██║  ██║   ██║   ",
+    "╚═╝     ╚═╝╚═╝  ╚═╝╚══════╝╚══════╝ ╚═════╝ ╚═╝  ╚═╝   ╚═╝   ",
+]
+
+def clear_screen():
+    """Clear the terminal screen"""
+    if os.name == 'nt':
+        os.system('cls')
+    else:
+        # Use ANSI escape codes to clear screen and move cursor to top
+        print('\033[2J\033[H', end='')
+
+def get_rainbow_color(index, total):
+    """Get a color from the rainbow spectrum"""
+    colors = ['red', 'yellow', 'green', 'cyan', 'blue', 'magenta', 'pink']
+    return colors[index % len(colors)]
+
+def print_sparkle_border(width, color='cyan'):
+    """Print a sparkly border"""
+    sparkle = random.choice(SPARKLES)
+    border = sparkle + ' ' * (width - 2) + sparkle
+    print(COLORS[color] + COLORS['bold'] + border + COLORS['reset'])
+
+def print_name_with_color(color_mode='rainbow'):
+    """Print MALLORY with colors"""
+    if color_mode == 'rainbow':
+        for i, line in enumerate(MALLORY):
+            colored_line = ''
+            for j, char in enumerate(line):
+                if char != ' ':
+                    color = get_rainbow_color(j, len(line))
+                    colored_line += COLORS[color] + COLORS['bold'] + char + COLORS['reset']
+                else:
+                    colored_line += char
+            print(colored_line)
+    elif color_mode == 'gradient':
+        colors = ['pink', 'magenta', 'cyan', 'blue', 'cyan', 'magenta']
+        for i, line in enumerate(MALLORY):
+            color = colors[i % len(colors)]
+            print(COLORS[color] + COLORS['bold'] + line + COLORS['reset'])
+    else:
+        for line in MALLORY:
+            print(COLORS[color_mode] + COLORS['bold'] + line + COLORS['reset'])
+
+def add_sparkles_around(num_sparkles=15):
+    """Add random sparkles around the name"""
+    sparkle_line = ''
+    for _ in range(num_sparkles):
+        sparkle = random.choice(SPARKLES + HEARTS)
+        color = random.choice(['pink', 'cyan', 'yellow', 'magenta', 'white'])
+        sparkle_line += COLORS[color] + sparkle + ' '
+    print(sparkle_line + COLORS['reset'])
+
+def animate_sparkle_entrance():
+    """Animated entrance with sparkles"""
+    clear_screen()
+    
+    # Sparkle rain effect
+    for _ in range(5):
+        line = ''
+        for _ in range(20):
+            if random.random() > 0.7:
+                sparkle = random.choice(SPARKLES)
+                color = random.choice(['pink', 'cyan', 'yellow', 'white'])
+                line += COLORS[color] + sparkle + ' '
+            else:
+                line += '  '
+        print(line + COLORS['reset'])
+        time.sleep(0.1)
+    
+    time.sleep(0.3)
+
+def display_with_effects():
+    """Display the name with various sparkly effects"""
+    
+    # Effect 1: Rainbow wave
+    clear_screen()
+    print('\n')
+    add_sparkles_around(20)
+    print('\n')
+    print_name_with_color('rainbow')
+    print('\n')
+    add_sparkles_around(20)
+    time.sleep(1.5)
+    
+    # Effect 2: Gradient
+    clear_screen()
+    print('\n')
+    add_sparkles_around(20)
+    print('\n')
+    print_name_with_color('gradient')
+    print('\n')
+    add_sparkles_around(20)
+    time.sleep(1.5)
+    
+    # Effect 3: Pink sparkle
+    clear_screen()
+    print('\n')
+    add_sparkles_around(20)
+    print('\n')
+    print_name_with_color('pink')
+    print('\n')
+    add_sparkles_around(20)
+    time.sleep(1.5)
+    
+    # Effect 4: Cyan glow
+    clear_screen()
+    print('\n')
+    add_sparkles_around(20)
+    print('\n')
+    print_name_with_color('cyan')
+    print('\n')
+    add_sparkles_around(20)
+    time.sleep(1.5)
+
+def final_display():
+    """Final sparkly display"""
+    clear_screen()
+    print('\n')
+    
+    # Top sparkle border
+    print(COLORS['bold'])
+    for _ in range(3):
+        add_sparkles_around(25)
+    print(COLORS['reset'])
+    
+    print('\n')
+    
+    # The name in rainbow
+    print_name_with_color('rainbow')
+    
+    print('\n')
+    
+    # Bottom sparkle border with hearts
+    print(COLORS['bold'])
+    for _ in range(3):
+        add_sparkles_around(25)
+    print(COLORS['reset'])
+    
+    # Final message
+    print('\n')
+    message = "✨ SHINE BRIGHT LIKE A DIAMOND ✨"
+    colors = ['pink', 'cyan', 'yellow', 'magenta']
+    colored_message = ''
+    for i, char in enumerate(message):
+        color = colors[i % len(colors)]
+        colored_message += COLORS[color] + COLORS['bold'] + char + COLORS['reset']
+    print(' ' * 10 + colored_message)
+    print('\n')
+
+def continuous_sparkle_animation():
+    """Continuously animate with changing colors and sparkles"""
+    effects = ['rainbow', 'gradient', 'pink', 'cyan', 'magenta', 'yellow']
+    effect_index = 0
+    
+    while True:
+        clear_screen()
+        sys.stdout.flush()  # Force flush to ensure screen clears
+        print('\n')
+        
+        # Random sparkles at top
+        for _ in range(3):
+            add_sparkles_around(25)
+        
+        print('\n')
+        
+        # Display name with current effect
+        print_name_with_color(effects[effect_index])
+        
+        print('\n')
+        
+        # Random sparkles at bottom
+        for _ in range(3):
+            add_sparkles_around(25)
+        
+        # Sparkly message
+        print('\n')
+        messages = [
+            "✨ SHINE BRIGHT LIKE A DIAMOND ✨",
+            "💖 SPARKLE AND SHINE 💖",
+            "⭐ YOU'RE A STAR ⭐",
+            "🌟 RADIATE POSITIVITY 🌟",
+            "💫 DREAM BIG SPARKLE MORE 💫",
+            "✦ STAY MAGICAL ✦"
+        ]
+        message = random.choice(messages)
+        colors = ['pink', 'cyan', 'yellow', 'magenta']
+        colored_message = ''
+        for i, char in enumerate(message):
+            color = colors[i % len(colors)]
+            colored_message += COLORS[color] + COLORS['bold'] + char + COLORS['reset']
+        print(' ' * 8 + colored_message)
+        
+        print('\n')
+        print(COLORS['white'] + '     Press Ctrl+C to exit' + COLORS['reset'])
+        
+        # Wait before next animation
+        time.sleep(0.8)
+        
+        # Move to next effect
+        effect_index = (effect_index + 1) % len(effects)
+
+def main():
+    """Main function to run the sparkly name display"""
+    try:
+        # Quick entrance
+        clear_screen()
+        print('\n' * 5)
+        print(COLORS['cyan'] + COLORS['bold'] + '          ✨ Starting sparkle show... ✨' + COLORS['reset'])
+        time.sleep(1)
+        
+        # Continuous animation
+        continuous_sparkle_animation()
+        
+    except KeyboardInterrupt:
+        clear_screen()
+        print('\n\n' + COLORS['pink'] + COLORS['bold'] + '          ✨ Bye! Stay sparkly! ✨' + COLORS['reset'] + '\n\n')
+        sys.exit(0)
+
+if __name__ == '__main__':
+    main()
+

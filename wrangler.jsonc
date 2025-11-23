@@ -1,5 +1,5 @@
 {
-  "name": "mallory-site",
+  "name": "mallory",
   "compatibility_date": "2025-11-23",
   "assets": {
     "directory": "./dist",

@@ -1,262 +1,424 @@
-"""
-Sparkly Pixel Art Name Display - MALLORY
-A fun, colorful terminal animation with sparkles!
-"""
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>✨ MALLORY ✨</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-import time
-import random
-import os
-import sys
+        body {
+            background: linear-gradient(135deg, 
+                #ff6b9d 0%, 
+                #ffd93d 20%, 
+                #6bcf7f 40%, 
+                #4ecdc4 60%, 
+                #95e1d3 80%, 
+                #c77dff 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 8s ease infinite;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Courier New', monospace;
+            overflow: hidden;
+            position: relative;
+        }
 
-# Fix Windows console encoding
-if sys.platform == 'win32':
-    import codecs
-    sys.stdout = codecs.getwriter('utf-8')(sys.stdout.buffer, 'strict')
-    sys.stderr = codecs.getwriter('utf-8')(sys.stderr.buffer, 'strict')
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
 
-# ANSI color codes for sparkly effects
-COLORS = {
-    'pink': '\033[95m',
-    'cyan': '\033[96m',
-    'yellow': '\033[93m',
-    'green': '\033[92m',
-    'blue': '\033[94m',
-    'magenta': '\033[95m',
-    'red': '\033[91m',
-    'white': '\033[97m',
-    'bold': '\033[1m',
-    'reset': '\033[0m',
-}
+        .sparkle-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
 
-# Sparkle characters
-SPARKLES = ['✨', '⭐', '🌟', '💫', '✦', '✧', '★', '☆', '◆', '◇']
-HEARTS = ['💖', '💕', '💗', '💓', '💝']
+        .sparkle {
+            position: absolute;
+            font-size: 24px;
+            animation: float 3s ease-in-out infinite;
+            opacity: 0;
+        }
 
-# Pixel art for MALLORY (7x5 grid per letter)
-MALLORY = [
-    "███╗   ███╗ █████╗ ██╗     ██╗      ██████╗ ██████╗ ██╗   ██╗",
-    "████╗ ████║██╔══██╗██║     ██║     ██╔═══██╗██╔══██╗╚██╗ ██╔╝",
-    "██╔████╔██║███████║██║     ██║     ██║   ██║██████╔╝ ╚████╔╝ ",
-    "██║╚██╔╝██║██╔══██║██║     ██║     ██║   ██║██╔══██╗  ╚██╔╝  ",
-    "██║ ╚═╝ ██║██║  ██║███████╗███████╗╚██████╔╝██║  ██║   ██║   ",
-    "╚═╝     ╚═╝╚═╝  ╚═╝╚══════╝╚══════╝ ╚═════╝ ╚═╝  ╚═╝   ╚═╝   ",
-]
+        @keyframes float {
+            0%, 100% {
+                opacity: 0;
+                transform: translateY(0) scale(0.5);
+            }
+            50% {
+                opacity: 1;
+                transform: translateY(-30px) scale(1);
+            }
+        }
 
-def clear_screen():
-    """Clear the terminal screen"""
-    if os.name == 'nt':
-        os.system('cls')
-    else:
-        # Use ANSI escape codes to clear screen and move cursor to top
-        print('\033[2J\033[H', end='')
+        .main-content {
+            text-align: center;
+            z-index: 2;
+            position: relative;
+        }
 
-def get_rainbow_color(index, total):
-    """Get a color from the rainbow spectrum"""
-    colors = ['red', 'yellow', 'green', 'cyan', 'blue', 'magenta', 'pink']
-    return colors[index % len(colors)]
+        .name-container {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            border-radius: 30px;
+            padding: 40px 60px;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.3),
+                0 0 60px rgba(255, 107, 157, 0.4),
+                0 0 100px rgba(199, 125, 255, 0.3);
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            animation: containerFloat 4s ease-in-out infinite;
+        }
 
-def print_sparkle_border(width, color='cyan'):
-    """Print a sparkly border"""
-    sparkle = random.choice(SPARKLES)
-    border = sparkle + ' ' * (width - 2) + sparkle
-    print(COLORS[color] + COLORS['bold'] + border + COLORS['reset'])
+        @keyframes containerFloat {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            25% {
+                transform: translateY(-10px) rotate(1deg);
+            }
+            50% {
+                transform: translateY(0) rotate(0deg);
+            }
+            75% {
+                transform: translateY(-10px) rotate(-1deg);
+            }
+        }
 
-def print_name_with_color(color_mode='rainbow'):
-    """Print MALLORY with colors"""
-    if color_mode == 'rainbow':
-        for i, line in enumerate(MALLORY):
-            colored_line = ''
-            for j, char in enumerate(line):
-                if char != ' ':
-                    color = get_rainbow_color(j, len(line))
-                    colored_line += COLORS[color] + COLORS['bold'] + char + COLORS['reset']
-                else:
-                    colored_line += char
-            print(colored_line)
-    elif color_mode == 'gradient':
-        colors = ['pink', 'magenta', 'cyan', 'blue', 'cyan', 'magenta']
-        for i, line in enumerate(MALLORY):
-            color = colors[i % len(colors)]
-            print(COLORS[color] + COLORS['bold'] + line + COLORS['reset'])
-    else:
-        for line in MALLORY:
-            print(COLORS[color_mode] + COLORS['bold'] + line + COLORS['reset'])
+        .name {
+            font-size: 72px;
+            font-weight: bold;
+            letter-spacing: 8px;
+            text-shadow: 
+                0 0 10px rgba(255, 255, 255, 1),
+                0 0 20px currentColor,
+                0 0 30px currentColor,
+                0 0 40px currentColor,
+                0 0 70px currentColor,
+                0 0 80px currentColor;
+            animation: colorCycle 3s ease-in-out infinite, nameWobble 2s ease-in-out infinite;
+            line-height: 1.2;
+        }
 
-def add_sparkles_around(num_sparkles=15):
-    """Add random sparkles around the name"""
-    sparkle_line = ''
-    for _ in range(num_sparkles):
-        sparkle = random.choice(SPARKLES + HEARTS)
-        color = random.choice(['pink', 'cyan', 'yellow', 'magenta', 'white'])
-        sparkle_line += COLORS[color] + sparkle + ' '
-    print(sparkle_line + COLORS['reset'])
+        @keyframes colorCycle {
+            0% { color: #ff6b9d; }
+            14% { color: #ffd93d; }
+            28% { color: #6bcf7f; }
+            42% { color: #4ecdc4; }
+            57% { color: #95e1d3; }
+            71% { color: #c77dff; }
+            85% { color: #ff1493; }
+            100% { color: #ff6b9d; }
+        }
 
-def animate_sparkle_entrance():
-    """Animated entrance with sparkles"""
-    clear_screen()
+        @keyframes nameWobble {
+            0%, 100% {
+                transform: scale(1) rotate(0deg);
+            }
+            25% {
+                transform: scale(1.05) rotate(2deg);
+            }
+            50% {
+                transform: scale(1) rotate(0deg);
+            }
+            75% {
+                transform: scale(1.05) rotate(-2deg);
+            }
+        }
+
+        .message {
+            margin-top: 30px;
+            font-size: 24px;
+            color: white;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            animation: messageFade 4s ease-in-out infinite;
+        }
+
+        @keyframes messageFade {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        .emoji-rain {
+            position: fixed;
+            font-size: 30px;
+            animation: fall linear forwards;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .glow-effect {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            background: radial-gradient(circle, 
+                rgba(255, 107, 157, 0.4) 0%, 
+                rgba(199, 125, 255, 0.3) 30%,
+                rgba(76, 236, 196, 0.2) 60%,
+                transparent 80%);
+            animation: pulse 2s ease-in-out infinite, colorRotate 6s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1) rotate(0deg);
+                opacity: 0.6;
+            }
+            50% {
+                transform: scale(1.3) rotate(180deg);
+                opacity: 0.9;
+            }
+        }
+
+        @keyframes colorRotate {
+            0% {
+                filter: hue-rotate(0deg);
+            }
+            100% {
+                filter: hue-rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sparkle-container" id="sparkleContainer"></div>
     
-    # Sparkle rain effect
-    for _ in range(5):
-        line = ''
-        for _ in range(20):
-            if random.random() > 0.7:
-                sparkle = random.choice(SPARKLES)
-                color = random.choice(['pink', 'cyan', 'yellow', 'white'])
-                line += COLORS[color] + sparkle + ' '
-            else:
-                line += '  '
-        print(line + COLORS['reset'])
-        time.sleep(0.1)
-    
-    time.sleep(0.3)
+    <div class="main-content">
+        <div class="glow-effect"></div>
+        <div class="name-container">
+            <div class="name" id="nameDisplay">MALLORY</div>
+            <div class="message" id="message">✨ SHINE BRIGHT LIKE A DIAMOND ✨</div>
+        </div>
+    </div>
 
-def display_with_effects():
-    """Display the name with various sparkly effects"""
-    
-    # Effect 1: Rainbow wave
-    clear_screen()
-    print('\n')
-    add_sparkles_around(20)
-    print('\n')
-    print_name_with_color('rainbow')
-    print('\n')
-    add_sparkles_around(20)
-    time.sleep(1.5)
-    
-    # Effect 2: Gradient
-    clear_screen()
-    print('\n')
-    add_sparkles_around(20)
-    print('\n')
-    print_name_with_color('gradient')
-    print('\n')
-    add_sparkles_around(20)
-    time.sleep(1.5)
-    
-    # Effect 3: Pink sparkle
-    clear_screen()
-    print('\n')
-    add_sparkles_around(20)
-    print('\n')
-    print_name_with_color('pink')
-    print('\n')
-    add_sparkles_around(20)
-    time.sleep(1.5)
-    
-    # Effect 4: Cyan glow
-    clear_screen()
-    print('\n')
-    add_sparkles_around(20)
-    print('\n')
-    print_name_with_color('cyan')
-    print('\n')
-    add_sparkles_around(20)
-    time.sleep(1.5)
-
-def final_display():
-    """Final sparkly display"""
-    clear_screen()
-    print('\n')
-    
-    # Top sparkle border
-    print(COLORS['bold'])
-    for _ in range(3):
-        add_sparkles_around(25)
-    print(COLORS['reset'])
-    
-    print('\n')
-    
-    # The name in rainbow
-    print_name_with_color('rainbow')
-    
-    print('\n')
-    
-    # Bottom sparkle border with hearts
-    print(COLORS['bold'])
-    for _ in range(3):
-        add_sparkles_around(25)
-    print(COLORS['reset'])
-    
-    # Final message
-    print('\n')
-    message = "✨ SHINE BRIGHT LIKE A DIAMOND ✨"
-    colors = ['pink', 'cyan', 'yellow', 'magenta']
-    colored_message = ''
-    for i, char in enumerate(message):
-        color = colors[i % len(colors)]
-        colored_message += COLORS[color] + COLORS['bold'] + char + COLORS['reset']
-    print(' ' * 10 + colored_message)
-    print('\n')
-
-def continuous_sparkle_animation():
-    """Continuously animate with changing colors and sparkles"""
-    effects = ['rainbow', 'gradient', 'pink', 'cyan', 'magenta', 'yellow']
-    effect_index = 0
-    
-    while True:
-        clear_screen()
-        sys.stdout.flush()  # Force flush to ensure screen clears
-        print('\n')
-        
-        # Random sparkles at top
-        for _ in range(3):
-            add_sparkles_around(25)
-        
-        print('\n')
-        
-        # Display name with current effect
-        print_name_with_color(effects[effect_index])
-        
-        print('\n')
-        
-        # Random sparkles at bottom
-        for _ in range(3):
-            add_sparkles_around(25)
-        
-        # Sparkly message
-        print('\n')
-        messages = [
+    <script>
+        const messages = [
             "✨ SHINE BRIGHT LIKE A DIAMOND ✨",
             "💖 SPARKLE AND SHINE 💖",
             "⭐ YOU'RE A STAR ⭐",
             "🌟 RADIATE POSITIVITY 🌟",
             "💫 DREAM BIG SPARKLE MORE 💫",
-            "✦ STAY MAGICAL ✦"
-        ]
-        message = random.choice(messages)
-        colors = ['pink', 'cyan', 'yellow', 'magenta']
-        colored_message = ''
-        for i, char in enumerate(message):
-            color = colors[i % len(colors)]
-            colored_message += COLORS[color] + COLORS['bold'] + char + COLORS['reset']
-        print(' ' * 8 + colored_message)
-        
-        print('\n')
-        print(COLORS['white'] + '     Press Ctrl+C to exit' + COLORS['reset'])
-        
-        # Wait before next animation
-        time.sleep(0.8)
-        
-        # Move to next effect
-        effect_index = (effect_index + 1) % len(effects)
+            "✦ STAY MAGICAL ✦",
+            "💝 SPREAD LOVE AND LIGHT 💝",
+            "🌈 BE YOUR OWN RAINBOW 🌈"
+        ];
 
-def main():
-    """Main function to run the sparkly name display"""
-    try:
-        # Quick entrance
-        clear_screen()
-        print('\n' * 5)
-        print(COLORS['cyan'] + COLORS['bold'] + '          ✨ Starting sparkle show... ✨' + COLORS['reset'])
-        time.sleep(1)
-        
-        # Continuous animation
-        continuous_sparkle_animation()
-        
-    except KeyboardInterrupt:
-        clear_screen()
-        print('\n\n' + COLORS['pink'] + COLORS['bold'] + '          ✨ Bye! Stay sparkly! ✨' + COLORS['reset'] + '\n\n')
-        sys.exit(0)
+        const sparkleEmojis = ['✨', '⭐', '🌟', '💫', '✦', '✧', '★', '☆', '◆', '◇'];
+        const heartEmojis = ['💖', '💕', '💗', '💓', '💝'];
+        const pawEmojis = ['🐾'];
+        const gymnasticsEmojis = ['🤸‍♀️', '🤸', '🤸‍♂️', '🧘‍♀️', '🤾‍♀️'];
+        const allEmojis = [...sparkleEmojis, ...heartEmojis, ...gymnasticsEmojis];
 
-if __name__ == '__main__':
-    main()
+        let messageIndex = 0;
+
+        // Change message every 4 seconds
+        setInterval(() => {
+            messageIndex = (messageIndex + 1) % messages.length;
+            document.getElementById('message').textContent = messages[messageIndex];
+        }, 4000);
+
+        // Create floating sparkles around the name
+        function createSparkle() {
+            const sparkle = document.createElement('div');
+            sparkle.className = 'sparkle';
+            sparkle.textContent = sparkleEmojis[Math.floor(Math.random() * sparkleEmojis.length)];
+            
+            const container = document.getElementById('sparkleContainer');
+            const x = Math.random() * window.innerWidth;
+            const y = Math.random() * window.innerHeight;
+            
+            sparkle.style.left = x + 'px';
+            sparkle.style.top = y + 'px';
+            sparkle.style.animationDelay = Math.random() * 2 + 's';
+            sparkle.style.animationDuration = (Math.random() * 2 + 2) + 's';
+            
+            container.appendChild(sparkle);
+            
+            setTimeout(() => {
+                sparkle.remove();
+            }, 5000);
+        }
+
+        // Create sparkles continuously
+        setInterval(createSparkle, 200);
+
+        // Create emoji rain
+        function createEmojiRain() {
+            const emoji = document.createElement('div');
+            emoji.className = 'emoji-rain';
+            emoji.textContent = allEmojis[Math.floor(Math.random() * allEmojis.length)];
+            
+            const x = Math.random() * window.innerWidth;
+            emoji.style.left = x + 'px';
+            emoji.style.top = '-50px';
+            
+            const duration = Math.random() * 3 + 3;
+            emoji.style.animationDuration = duration + 's';
+            
+            document.body.appendChild(emoji);
+            
+            setTimeout(() => {
+                emoji.remove();
+            }, duration * 1000);
+        }
+
+        // Create emoji rain continuously
+        setInterval(createEmojiRain, 300);
+
+        // Create gymnastics flips across the screen
+        function createGymnasticsFlip() {
+            const gymnast = document.createElement('div');
+            gymnast.textContent = gymnasticsEmojis[Math.floor(Math.random() * gymnasticsEmojis.length)];
+            gymnast.style.position = 'fixed';
+            gymnast.style.fontSize = '48px';
+            gymnast.style.pointerEvents = 'none';
+            gymnast.style.zIndex = '999';
+            
+            // Random starting position (left or right side)
+            const fromLeft = Math.random() > 0.5;
+            const startY = Math.random() * (window.innerHeight - 100);
+            
+            if (fromLeft) {
+                gymnast.style.left = '-60px';
+                gymnast.style.top = startY + 'px';
+            } else {
+                gymnast.style.right = '-60px';
+                gymnast.style.top = startY + 'px';
+            }
+            
+            document.body.appendChild(gymnast);
+            
+            // Animate across screen with flips
+            const duration = 3000 + Math.random() * 2000;
+            const startTime = Date.now();
+            
+            function animate() {
+                const elapsed = Date.now() - startTime;
+                const progress = elapsed / duration;
+                
+                if (progress < 1) {
+                    // Move across screen
+                    const distance = window.innerWidth + 120;
+                    if (fromLeft) {
+                        gymnast.style.left = (progress * distance - 60) + 'px';
+                    } else {
+                        gymnast.style.right = (progress * distance - 60) + 'px';
+                    }
+                    
+                    // Flip and bounce
+                    const rotation = progress * 720; // Two full flips
+                    const bounce = Math.sin(progress * Math.PI * 3) * 50;
+                    gymnast.style.transform = `rotate(${rotation}deg) translateY(${bounce}px) scale(${1 + Math.sin(progress * Math.PI * 6) * 0.3})`;
+                    
+                    requestAnimationFrame(animate);
+                } else {
+                    gymnast.remove();
+                }
+            }
+            
+            animate();
+        }
+
+        // Create gymnastics flips every 4 seconds
+        setInterval(createGymnasticsFlip, 4000);
+        // Start with one immediately
+        setTimeout(createGymnasticsFlip, 500);
+
+        // Add mouse trail with paw prints
+        let lastPawTime = 0;
+        document.addEventListener('mousemove', (e) => {
+            const now = Date.now();
+            if (now - lastPawTime > 150) {
+                const paw = document.createElement('div');
+                paw.className = 'sparkle';
+                paw.textContent = '🐾';
+                paw.style.left = e.clientX + 'px';
+                paw.style.top = e.clientY + 'px';
+                paw.style.position = 'fixed';
+                paw.style.pointerEvents = 'none';
+                paw.style.zIndex = '1000';
+                paw.style.fontSize = '32px';
+                
+                // Random rotation for variety
+                const rotation = Math.random() * 360;
+                paw.style.transform = `rotate(${rotation}deg)`;
+                
+                document.body.appendChild(paw);
+                
+                setTimeout(() => {
+                    paw.style.transition = 'opacity 0.5s ease';
+                    paw.style.opacity = '0';
+                    setTimeout(() => {
+                        paw.remove();
+                    }, 500);
+                }, 1500);
+                
+                lastPawTime = now;
+            }
+        });
+
+        // Add click effect
+        document.addEventListener('click', (e) => {
+            for (let i = 0; i < 10; i++) {
+                setTimeout(() => {
+                    const sparkle = document.createElement('div');
+                    sparkle.className = 'sparkle';
+                    sparkle.textContent = allEmojis[Math.floor(Math.random() * allEmojis.length)];
+                    sparkle.style.left = (e.clientX + (Math.random() - 0.5) * 100) + 'px';
+                    sparkle.style.top = (e.clientY + (Math.random() - 0.5) * 100) + 'px';
+                    sparkle.style.position = 'fixed';
+                    sparkle.style.pointerEvents = 'none';
+                    sparkle.style.zIndex = '1000';
+                    sparkle.style.fontSize = (Math.random() * 20 + 20) + 'px';
+                    document.body.appendChild(sparkle);
+                    
+                    setTimeout(() => {
+                        sparkle.remove();
+                    }, 2000);
+                }, i * 50);
+            }
+        });
+
+        // Keyboard sparkle effect
+        document.addEventListener('keypress', () => {
+            const nameElement = document.getElementById('nameDisplay');
+            nameElement.style.transform = 'scale(1.1)';
+            setTimeout(() => {
+                nameElement.style.transform = 'scale(1)';
+            }, 200);
+            
+            // Create burst of sparkles
+            for (let i = 0; i < 5; i++) {
+                createSparkle();
+            }
+        });
+
+        // Add transition effect to name
+        document.getElementById('nameDisplay').style.transition = 'transform 0.2s ease';
+    </script>
+</body>
+</html>
 
